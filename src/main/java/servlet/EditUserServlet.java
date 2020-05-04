@@ -1,7 +1,8 @@
 package servlet;
 
 import model.User;
-import service.UserService;
+import service.UserHibernateService;
+import service.UserJdbcService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +13,8 @@ import java.io.IOException;
 
 @WebServlet(value = "/editUser")
 public class EditUserServlet extends HttpServlet {
-    UserService userService = UserService.getInstance();
+    UserJdbcService userJdbcService = UserJdbcService.getInstance();
+    UserHibernateService userHibernateService = UserHibernateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,7 +31,8 @@ public class EditUserServlet extends HttpServlet {
             String newLastName = req.getParameter("lastName");
             long newAge = Long.parseLong(req.getParameter("age"));
             User user = new User(id, newName, newLastName, newAge);
-            userService.editUser(user);
+//            userJdbcService.editUser(user);
+            userHibernateService.editUser(user);
         }
         getServletContext().getRequestDispatcher("/users").forward(req, resp);
     }

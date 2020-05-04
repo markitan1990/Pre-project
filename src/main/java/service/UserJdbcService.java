@@ -9,20 +9,20 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserService {
-    private static UserService userService;
+public class UserJdbcService {
+    private static UserJdbcService userJdbcService;
     private Connection connection;
     private UserJdbcDAO userJdbcDAO = UserJdbcDAO.getIstance();
 
-    private UserService(Connection connection) {
+    private UserJdbcService(Connection connection) {
         this.connection = connection;
     }
 
-    public static UserService getInstance() {
-        if (userService == null) {
-            return new UserService(DBhelper.getJdbcConnection());
+    public static UserJdbcService getInstance() {
+        if (userJdbcService == null) {
+            return new UserJdbcService(DBhelper.getJdbcConnection());
         }
-        return userService;
+        return userJdbcService;
     }
 
     public void addUser(User user) throws SQLException {

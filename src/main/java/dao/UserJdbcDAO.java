@@ -46,7 +46,7 @@ public class UserJdbcDAO implements UserDao {
     public boolean findUser(User user) throws SQLException {
         boolean res = false;
         try (PreparedStatement preparedStatement =
-                     connection.prepareStatement("select exists (select 1  from users where name = ? and lastName = ? and age = ?")) {
+                     connection.prepareStatement("select exists (select 1  from users where name = ? and lastName = ? and age = ? )")) {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setLong(3, user.getAge());
