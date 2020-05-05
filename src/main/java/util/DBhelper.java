@@ -11,20 +11,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DBhelper  {
-    private static Connection connection;
+public class DBhelper {
+    private static DBhelper dBhelper;
 
     private DBhelper() {
 
     }
 
-    public static Connection getJdbcConnection() {
-        if (connection == null) {
-            return new DBhelper().getConnection();
+    public static DBhelper getInstance() {
+        if (dBhelper == null) {
+            return new DBhelper();
         }
-        return connection;
+        return dBhelper;
     }
-
 
     public Connection getConnection() {
         try {
@@ -41,11 +40,32 @@ public class DBhelper  {
                     append("password=root&").       //password
                     append("serverTimezone=UTC");   //setup server time
 
-            connection = DriverManager.getConnection(url.toString());
+            Connection connection = DriverManager.getConnection(url.toString());
             return connection;
         } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             e.printStackTrace();
             throw new IllegalStateException();
         }
     }
+
+    public SessionFactory getConfiguration() {
+
+        Configuration configuration = new Configuration();
+        configuration.addAnnotatedClass(User.class);
+
+        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/users?serverTimezone=UTC");
+        configuration.setProperty("hibernate.connection.username", "root");
+        configuration.setProperty("hibernate.connection.password", "root");
+        configuration.setProperty("hibernate.show_sql", "true");
+        configuration.setProperty("hibernate.hbm2ddl.auto", "update");
+
+        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
+        builder.applySettings(configuration.getProperties());
+        ServiceRegistry serviceRegistry = builder.build();
+        SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        return sessionFactory;
+    }
+
 }

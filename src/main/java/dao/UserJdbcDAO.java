@@ -2,6 +2,7 @@ package dao;
 
 
 import model.User;
+import org.w3c.dom.ls.LSOutput;
 import util.DBhelper;
 import util.UserDao;
 
@@ -19,14 +20,14 @@ public class UserJdbcDAO implements UserDao {
 
     public static UserJdbcDAO getIstance() {
         if (userJdbcDAO == null) {
-            return new UserJdbcDAO(DBhelper.getJdbcConnection());
+            return new UserJdbcDAO(DBhelper.getInstance().getConnection());
         }
         return userJdbcDAO;
     }
 
-    public void addUser(User user) throws SQLException {
-        try (Statement statement = connection.createStatement();
-             PreparedStatement preparedStatement =
+    @Override
+    public void addUser(User user) {
+        try (PreparedStatement preparedStatement =
                      connection.prepareStatement("insert into users (name, lastName, age) values  (?,?,?)")) {
             try {
                 connection.setAutoCommit(false);
@@ -40,10 +41,13 @@ public class UserJdbcDAO implements UserDao {
             } finally {
                 connection.setAutoCommit(true);
             }
+        } catch (SQLException throwables) {
+            System.out.println("Не получилось добавить пользователя");
         }
     }
 
-    public boolean findUser(User user) throws SQLException {
+    @Override
+    public boolean isUserExist(User user) {
         boolean res = false;
         try (PreparedStatement preparedStatement =
                      connection.prepareStatement("select exists (select 1  from users where name = ? and lastName = ? and age = ? )")) {
@@ -51,11 +55,14 @@ public class UserJdbcDAO implements UserDao {
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setLong(3, user.getAge());
             res = preparedStatement.execute();
+        } catch (SQLException e) {
+
         }
         return res;
     }
 
-    public List<User> getListUsers() throws SQLException {
+    @Override
+    public List<User> getAllUsers() {
         List<User> list = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement("select * from users")) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -66,11 +73,15 @@ public class UserJdbcDAO implements UserDao {
                 long age = resultSet.getLong("age");
                 list.add(new User(id, name, lastName, age));
             }
+        } catch (SQLException e) {
+            System.out.println("Список не получен");
         }
         return list;
     }
 
-    public boolean deleteUser(long id) throws SQLException {
+
+    @Override
+    public boolean deleteUser(long id) {
         boolean res = false;
         try (PreparedStatement preparedStatement = connection.prepareStatement("delete from users where id = ?")) {
             preparedStatement.setLong(1, id);
@@ -81,28 +92,33 @@ public class UserJdbcDAO implements UserDao {
                 res = true;
             } catch (SQLException throwables) {
                 connection.rollback();
+            } finally {
+                connection.setAutoCommit(true);
             }
-        }finally {
-            connection.setAutoCommit(true);
+        } catch (SQLException throwables) {
+            System.out.println("Пользователь не удален");
         }
         return res;
     }
 
-    public void editUser(User user) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("update users set name = ?, lastName = ?, age = ? where id = ?")){
+    @Override
+    public void editUser(User user) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("update users set name = ?, lastName = ?, age = ? where id = ?")) {
             connection.setAutoCommit(false);
             try {
-                preparedStatement.setString(1,user.getName());
-                preparedStatement.setString(2,user.getLastName());
+                preparedStatement.setString(1, user.getName());
+                preparedStatement.setString(2, user.getLastName());
                 preparedStatement.setLong(3, user.getAge());
                 preparedStatement.setLong(4, user.getId());
                 preparedStatement.execute();
                 connection.commit();
             } catch (SQLException throwables) {
                 connection.rollback();
+            } finally {
+                connection.setAutoCommit(true);
             }
-        }finally {
-            connection.setAutoCommit(true);
+        } catch (SQLException throwables) {
+            System.out.println("Не удалось редактирование");
         }
     }
 }

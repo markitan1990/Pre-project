@@ -2,8 +2,7 @@ package servlet;
 
 
 import model.User;
-import service.UserHibernateService;
-import service.UserJdbcService;
+import service.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,14 +14,17 @@ import java.util.List;
 
 @WebServlet(value = "/users")
 public class UserServlet extends HttpServlet {
-    UserJdbcService userJdbcService = UserJdbcService.getInstance();
-    UserHibernateService userHibernateService = UserHibernateService.getInstance();
+    Service service = Service.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        List<User> list = userJdbcService.getAllUsers();
-        List<User> list = userHibernateService.getAllUsers();
-        req.setAttribute("users", list);
+        try {
+            List<User> list = service.getAllUsers();
+            req.setAttribute("users", list);
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (Exception e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
         getServletContext().getRequestDispatcher("/castom.jsp").forward(req, resp);
     }
 
@@ -30,4 +32,5 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doGet(req, resp);
     }
+
 }

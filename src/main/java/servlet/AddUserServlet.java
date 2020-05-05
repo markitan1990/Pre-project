@@ -1,8 +1,7 @@
 package servlet;
 
 import model.User;
-import service.UserHibernateService;
-import service.UserJdbcService;
+import service.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,8 +13,7 @@ import java.sql.SQLException;
 
 @WebServlet(value = "/addUser")
 public class AddUserServlet extends HttpServlet {
-    UserJdbcService userJdbcService = UserJdbcService.getInstance();
-    UserHibernateService userHibernateService = UserHibernateService.getInstance();
+    Service service = Service.getInstance();
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -25,9 +23,10 @@ public class AddUserServlet extends HttpServlet {
         } else {
             User user = new User(req.getParameter("name"), req.getParameter("lastName"), Long.parseLong(req.getParameter("age")));
             try {
-//                userJdbcService.addUser(user);
-                userHibernateService.addUser(user);
+                service.addUser(user);
+                resp.setStatus(HttpServletResponse.SC_OK);
             } catch (SQLException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 System.out.println("не получилось добавить пользователя");
             }
         }

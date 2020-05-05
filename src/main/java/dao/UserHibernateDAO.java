@@ -5,7 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import util.HibernateHelper;
+import util.DBhelper;
 import util.UserDao;
 
 import java.util.List;
@@ -20,11 +20,12 @@ public class UserHibernateDAO implements UserDao {
 
     public static UserHibernateDAO getInstance() {
         if (userHibernateDAO == null) {
-            return new UserHibernateDAO(HibernateHelper.getHibernateSession());
+            return new UserHibernateDAO(DBhelper.getInstance().getConfiguration());
         }
         return userHibernateDAO;
     }
 
+    @Override
     public boolean isUserExist(User user) {
         try (Session session = sessionFactory.openSession()) {
             Query query = session.createQuery("from User where name = :name and lastName = :lastName and age =:age");
@@ -39,6 +40,7 @@ public class UserHibernateDAO implements UserDao {
         return false;
     }
 
+    @Override
     public void addUser(User user) {
         try (Session session = sessionFactory.openSession();) {
             Transaction transaction = session.beginTransaction();
@@ -51,6 +53,7 @@ public class UserHibernateDAO implements UserDao {
         }
     }
 
+    @Override
     public List<User> getAllUsers() {
         List<User> list = null;
         try (Session session = sessionFactory.openSession()) {
@@ -60,6 +63,7 @@ public class UserHibernateDAO implements UserDao {
         return list;
     }
 
+    @Override
     public boolean deleteUser(long id) {
         boolean res = false;
         try (Session session = sessionFactory.openSession()) {
@@ -75,6 +79,7 @@ public class UserHibernateDAO implements UserDao {
         return res;
     }
 
+    @Override
     public void editUser(User user) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();

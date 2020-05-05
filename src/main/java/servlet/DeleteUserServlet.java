@@ -1,8 +1,7 @@
 package servlet;
 
 
-import service.UserHibernateService;
-import service.UserJdbcService;
+import service.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,8 +12,7 @@ import java.io.IOException;
 
 @WebServlet(value = "/deleteUser")
 public class DeleteUserServlet extends HttpServlet {
-    UserJdbcService userJdbcService = UserJdbcService.getInstance();
-    UserHibernateService userHibernateService = UserHibernateService.getInstance();
+    Service service = Service.getInstance();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -24,8 +22,7 @@ public class DeleteUserServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         long id = Long.parseLong(req.getParameter("Delete"));
-//        if (userJdbcService.deleteUser(id)) {
-        if (userHibernateService.deleteUser(id)) {
+        if (service.deleteUser(id)) {
             System.out.println("Удаление прошло успешно");
             resp.setStatus(HttpServletResponse.SC_OK);
         } else {
