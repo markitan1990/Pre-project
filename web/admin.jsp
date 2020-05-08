@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: 100nout.by
-  Date: 28.04.2020
-  Time: 3:34
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -77,7 +70,7 @@
         justify-content: center;
         align-items: center;
         width: 30%;
-        height: 30%;
+        height: 40%;
         transition: 0.5s;
         margin: 0 auto;
     }
@@ -118,7 +111,12 @@
     }
 
     #close form .inp {
+        width: 50%;
         margin: 15px;
+    }
+    .combobox{
+        margin: 4px 7px;
+
     }
 </style>
 <script>
@@ -147,7 +145,11 @@
 <form action="addUser" method="post">
     <input type="text" name="name" placeholder="Name">
     <input type="text" name="lastName" placeholder="Second Name">
-    <input type="number" name="age" placeholder="Age">
+    <input type="text" name="password" placeholder="Password">
+    <select name ="combobox" class="combobox">
+        <option name="user">User</option>
+        <option name="admin">Admin</option>
+    </select>
     <button type="submit" name="Add">Add</button>
 </form>
 <div class="Users">
@@ -155,7 +157,8 @@
         <div class="col">id</div>
         <div class="col">name</div>
         <div class="col">lastName</div>
-        <div class="col">age</div>
+        <div class="col">password</div>
+        <div class="col">role</div>
         <div class="col">
             buttons
         </div>
@@ -166,7 +169,8 @@
             <div class="col"><c:out value="${user.id}"/></div>
             <div class="col"><c:out value="${user.name}"/></div>
             <div class="col"><c:out value="${user.lastName}"/></div>
-            <div class="col"><c:out value="${user.age}"/></div>
+            <div class="col"><c:out value="${user.password}"/></div>
+            <div class="col"><c:out value="${user.role}"/></div>
             <div class="col">
                 <button id=${user.id} name=${user.id} onclick="editFunction(); javascript:f(this);">Edit</button>
                 <form action="deleteUser" method="post">
@@ -185,7 +189,11 @@
             <input type="text" name="id" value="" id="id">
             <input type="text" placeholder="New name" class="inp" name="name">
             <input type="text" placeholder="New lastName" class="inp" name="lastName">
-            <input type="number" placeholder="New age" class="inp" name="age">
+            <input type="text" placeholder="New password" class="inp" name="password">
+            <select name ="combobox" class="combobox inp">
+                <option name="user">User</option>
+                <option name="admin">Admin</option>
+            </select>
             <button type="submit" onclick="modalOff()" class="inp" name="Edit">Edit</button>
         </form>
     </div>

@@ -53,6 +53,10 @@ public class Service {
         }
     }
 
+    public User getUser(User user) {
+        return userDao.getUser(user);
+    }
+
     public boolean isUserExist(User user) {
         return userDao.isUserExist(user);
     }

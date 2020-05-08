@@ -6,6 +6,7 @@ import org.w3c.dom.ls.LSOutput;
 import util.DBhelper;
 import util.UserDao;
 
+import javax.management.Query;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,13 @@ public class UserJdbcDAO implements UserDao {
     @Override
     public void addUser(User user) {
         try (PreparedStatement preparedStatement =
-                     connection.prepareStatement("insert into users (name, lastName, age) values  (?,?,?)")) {
+                     connection.prepareStatement("insert into users (name, lastName, password, role) values  (?,?,?,?)")) {
             try {
                 connection.setAutoCommit(false);
                 preparedStatement.setString(1, user.getName());
                 preparedStatement.setString(2, user.getLastName());
-                preparedStatement.setLong(3, user.getAge());
+                preparedStatement.setString(3, user.getPassword());
+                preparedStatement.setString(4, user.getRole());
                 preparedStatement.execute();
                 connection.commit();
             } catch (SQLException throwables) {
@@ -50,13 +52,16 @@ public class UserJdbcDAO implements UserDao {
     public boolean isUserExist(User user) {
         boolean res = false;
         try (PreparedStatement preparedStatement =
-                     connection.prepareStatement("select exists (select 1  from users where name = ? and lastName = ? and age = ? )")) {
+                     connection.prepareStatement("select * from users where name = ? and lastName = ? and password = ?")) {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getLastName());
-            preparedStatement.setLong(3, user.getAge());
-            res = preparedStatement.execute();
+            preparedStatement.setString(3, user.getPassword());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if ( resultSet.next()){
+                res = true;
+            }
         } catch (SQLException e) {
-
+            System.out.println("Не верный запрос");
         }
         return res;
     }
@@ -70,8 +75,9 @@ public class UserJdbcDAO implements UserDao {
                 long id = resultSet.getLong("id");
                 String name = resultSet.getString("name");
                 String lastName = resultSet.getString("lastName");
-                long age = resultSet.getLong("age");
-                list.add(new User(id, name, lastName, age));
+                String pass = resultSet.getString("password");
+                String role = resultSet.getString("role");
+                list.add(new User(id, name, lastName, pass, role));
             }
         } catch (SQLException e) {
             System.out.println("Список не получен");
@@ -103,13 +109,14 @@ public class UserJdbcDAO implements UserDao {
 
     @Override
     public void editUser(User user) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("update users set name = ?, lastName = ?, age = ? where id = ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("update users set name = ?, lastName = ?, password = ?, role = ? where id = ?")) {
             connection.setAutoCommit(false);
             try {
                 preparedStatement.setString(1, user.getName());
                 preparedStatement.setString(2, user.getLastName());
-                preparedStatement.setLong(3, user.getAge());
-                preparedStatement.setLong(4, user.getId());
+                preparedStatement.setString(3, user.getPassword());
+                preparedStatement.setString(4, user.getRole());
+                preparedStatement.setLong(5, user.getId());
                 preparedStatement.execute();
                 connection.commit();
             } catch (SQLException throwables) {
@@ -120,5 +127,27 @@ public class UserJdbcDAO implements UserDao {
         } catch (SQLException throwables) {
             System.out.println("Не удалось редактирование");
         }
+    }
+
+    @Override
+    public User getUser(User user) {
+        User res = null;
+        try (PreparedStatement preparedStatement =
+                     connection.prepareStatement("select * from users where name = ? and lastName = ? and password = ?")) {
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getLastName());
+            preparedStatement.setString(3, user.getPassword());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+
+            res = new User(resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("lastName"),
+                    resultSet.getString("password"),
+                    resultSet.getString("role"));
+        } catch (SQLException e) {
+            System.out.println("Не правельный запрос");
+        }
+        return res;
     }
 }

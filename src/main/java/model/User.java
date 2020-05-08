@@ -13,23 +13,40 @@ public class User {
     private String name;
     @Column(name = "lastName")
     private String lastName;
-    @Column(name = "age")
-    private Long age;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "role")
+    private String role;
 
     public User() {
     }
 
-    public User(String name, String lastName, Long age) {
+    public User(String name, String lastName, String password) {
         this.name = name;
         this.lastName = lastName;
-        this.age = age;
+        this.password = password;
+    }
+    public User(String name, String lastName, String password, String role) {
+        this.name = name;
+        this.lastName = lastName;
+        this.role = role;
+        this.password = password;
     }
 
-    public User(Long id, String name, String lastName, Long age) {
+    public User(Long id, String name, String lastName,String password, String role) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
-        this.age = age;
+        this.role = role;
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public long getId() {
@@ -56,12 +73,13 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Long getAge() {
-        return age;
+
+    public String getRole() {
+        return role;
     }
 
-    public void setAge(Long age) {
-        this.age = age;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override
@@ -71,11 +89,11 @@ public class User {
         User user = (User) o;
         return Objects.equals(name, user.name) &&
                 Objects.equals(lastName, user.lastName) &&
-                Objects.equals(age, user.age);
+                Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, lastName, age);
+        return Objects.hash(name, lastName, password);
     }
 }

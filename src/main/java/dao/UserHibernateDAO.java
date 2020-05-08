@@ -28,10 +28,10 @@ public class UserHibernateDAO implements UserDao {
     @Override
     public boolean isUserExist(User user) {
         try (Session session = sessionFactory.openSession()) {
-            Query query = session.createQuery("from User where name = :name and lastName = :lastName and age =:age");
+            Query query = session.createQuery("from User where name = :name and lastName = :lastName and password =:password");
             query.setParameter("name", user.getName());
             query.setParameter("lastName", user.getLastName());
-            query.setParameter("age", user.getAge());
+            query.setParameter("password", user.getPassword());
             List<User> list = query.list();
             if (list.size() > 0) {
                 return true;
@@ -89,6 +89,19 @@ public class UserHibernateDAO implements UserDao {
             } catch (Exception e) {
                 transaction.rollback();
             }
+        }
+    }
+
+    @Override
+    public User getUser(User user) {
+        try (Session session = sessionFactory.openSession()) {
+            Query query = session.createQuery("from User where name = :name and lastName = :lastName and password = :password");
+            query.setParameter("name", user.getName());
+            query.setParameter("lastName", user.getLastName());
+            query.setParameter("password", user.getPassword());
+
+            List<User> list = query.list();
+            return list.get(0);
         }
     }
 }

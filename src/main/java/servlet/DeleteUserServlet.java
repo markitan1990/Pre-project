@@ -28,6 +28,6 @@ public class DeleteUserServlet extends HttpServlet {
         } else {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
-        getServletContext().getRequestDispatcher("/users").forward(req, resp);
+        resp.sendRedirect("/admin");
     }
 }

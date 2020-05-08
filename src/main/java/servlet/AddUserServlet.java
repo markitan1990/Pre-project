@@ -18,10 +18,10 @@ public class AddUserServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        if (req.getParameter("name").isEmpty() || req.getParameter("lastName").isEmpty() || req.getParameter("age").isEmpty()) {
+        if (req.getParameter("name").isEmpty() || req.getParameter("lastName").isEmpty() || req.getParameter("password").isEmpty()) {
             System.out.println("форма не заполнена");
         } else {
-            User user = new User(req.getParameter("name"), req.getParameter("lastName"), Long.parseLong(req.getParameter("age")));
+            User user = new User(req.getParameter("name"), req.getParameter("lastName"), req.getParameter("password"), req.getParameter("combobox"));
             try {
                 service.addUser(user);
                 resp.setStatus(HttpServletResponse.SC_OK);
@@ -30,8 +30,7 @@ public class AddUserServlet extends HttpServlet {
                 System.out.println("не получилось добавить пользователя");
             }
         }
-
-        getServletContext().getRequestDispatcher("/users").forward(req, resp);
+        resp.sendRedirect("/admin");
     }
 
     @Override
