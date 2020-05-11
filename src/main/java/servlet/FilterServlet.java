@@ -1,8 +1,5 @@
 package servlet;
 
-import model.User;
-import service.Service;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -10,10 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = "/*")
+@WebFilter(urlPatterns = "/admin")
 public class FilterServlet implements Filter {
     private FilterConfig filterConfig;
-    private Service service = Service.getInstance();
     HttpServletRequest request = null;
     HttpServletResponse response = null;
 
@@ -25,34 +21,16 @@ public class FilterServlet implements Filter {
         HttpSession session = request.getSession();
         ServletContext ctx = filterConfig.getServletContext();
 
-        boolean isLoggedIn = (session != null && session.getAttribute("role") != null);
-
-        String loginURI = request.getContextPath() + "/login";
-        boolean isLoginRequest = request.getRequestURI().equals(loginURI);
-        boolean isLoginPage = request.getRequestURI().endsWith("login");
-
-        User user = null;
-        String query = request.getRequestURI();
-        if (isLoggedIn && (isLoginPage || isLoginRequest)) {
-            RequestDispatcher dispatcher = ctx.getRequestDispatcher("/" + session.getAttribute("role").toString().toLowerCase());
-            dispatcher.forward(request, response);
-        }
-        String re = request.getRequestURI();
+        boolean isLoggedIn = (session != null && session.getAttribute("user") != null);
         if (isLoggedIn) {
-            String us = session.getAttribute("role").toString().toLowerCase();
-            String name = session.getAttribute("name").toString();
-            String lastName = session.getAttribute("lastName").toString();
-            session.setAttribute("message", "Приветствую вас " + name + " " + lastName);
-            if (us.equals("user")) {
-                ctx.getRequestDispatcher("/user").forward(request, response);
+            String role = session.getAttribute("user").toString().toLowerCase();
+            if (role.equals("user")) {
+                response.sendRedirect("/user");
             } else {
-                ctx.getRequestDispatcher(re).forward(request, response);
-                return;
+                ctx.getRequestDispatcher(request.getRequestURI()).forward(request, response);
             }
         } else {
-            RequestDispatcher dispatcher = ctx.getRequestDispatcher("/login");
-            dispatcher.forward(request, response);
-            return;
+            response.sendRedirect("/login");
         }
         filterChain.doFilter(request, response);
     }

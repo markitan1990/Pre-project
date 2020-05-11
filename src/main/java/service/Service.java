@@ -1,16 +1,12 @@
 package service;
 
-import model.User;
 import dao.UserDao;
+import model.User;
 import util.PropertyReader;
 import util.UserDaoFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 
 public class Service {

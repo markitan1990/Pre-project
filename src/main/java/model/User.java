@@ -26,6 +26,7 @@ public class User {
         this.lastName = lastName;
         this.password = password;
     }
+
     public User(String name, String lastName, String password, String role) {
         this.name = name;
         this.lastName = lastName;
@@ -33,7 +34,7 @@ public class User {
         this.password = password;
     }
 
-    public User(Long id, String name, String lastName,String password, String role) {
+    public User(Long id, String name, String lastName, String password, String role) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;

@@ -2,9 +2,11 @@ package dao;
 
 
 import model.User;
-import util.DBhelper;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class UserJdbcDAO implements UserDao {
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getPassword());
             ResultSet resultSet = preparedStatement.executeQuery();
-            if ( resultSet.next()){
+            if (resultSet.next()) {
                 res = true;
             }
         } catch (SQLException e) {
