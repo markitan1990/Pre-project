@@ -1,7 +1,5 @@
 package servlet;
 
-import model.User;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,10 +14,14 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user");
-        String name = user.getName();
-        String lastName = user.getLastName();
-        session.setAttribute("message", "Приветствую вас " + name + " " + lastName);
+try {
+    String name = session.getAttribute("role").toString();
+    String lastName = session.getAttribute("lastName").toString();
+    session.setAttribute("message", "Приветствую вас " + name + " " + lastName);
+} catch (Exception e) {
+    System.out.println("Вы не можете перейти на данную страницу");
+}
+
         getServletContext().getRequestDispatcher("/user.jsp").forward(req, resp);
     }
 }

@@ -1,5 +1,8 @@
 package servlet;
 
+import model.User;
+import service.Service;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +24,9 @@ public class FilterServlet implements Filter {
         HttpSession session = request.getSession();
         ServletContext ctx = filterConfig.getServletContext();
 
-        boolean isLoggedIn = (session != null && session.getAttribute("user") != null);
+        boolean isLoggedIn = (session != null && session.getAttribute("role") != null);
         if (isLoggedIn) {
-            String role = session.getAttribute("user").toString().toLowerCase();
+            String role = session.getAttribute("role").toString().toLowerCase();
             if (role.equals("user")) {
                 response.sendRedirect("/user");
             } else {
@@ -32,7 +35,6 @@ public class FilterServlet implements Filter {
         } else {
             response.sendRedirect("/login");
         }
-        filterChain.doFilter(request, response);
     }
 
     @Override

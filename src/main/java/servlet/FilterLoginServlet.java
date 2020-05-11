@@ -14,7 +14,6 @@ import java.io.IOException;
 public class FilterLoginServlet implements Filter {
     private FilterConfig filterConfig;
     private Service service = Service.getInstance();
-    ServletContext ctx = filterConfig.getServletContext();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -26,13 +25,13 @@ public class FilterLoginServlet implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response =(HttpServletResponse) servletResponse;
         HttpSession session = request.getSession();
+        ServletContext ctx = filterConfig.getServletContext();
 
         String reqe = request.getMethod();
         if (request.getMethod().equals("GET")) {
-            boolean isLoggedIn = (session != null && session.getAttribute("user") != null);
+            boolean isLoggedIn = (session != null && session.getAttribute("role") != null);
             if (isLoggedIn) {
-                ctx.getRequestDispatcher("/" + session.getAttribute("user").toString().toLowerCase()).forward(request, response);
-                return;
+                ctx.getRequestDispatcher("/" + session.getAttribute("role").toString().toLowerCase()).forward(request, response);
             }
             ctx.getRequestDispatcher("/login.jsp").forward(request, response);
         } else if (reqe.equals("POST")) {
@@ -41,15 +40,20 @@ public class FilterLoginServlet implements Filter {
                 user = service.getUser(new User(request.getParameter("name"),
                         request.getParameter("lastName"), request.getParameter("password")));
                 if (user.getRole().equals("Admin")) {
-                    session.setAttribute("user", user);
+                    session.setAttribute("role", "Admin");
+                    session.setAttribute("name", user.getName());
+                    session.setAttribute("lastName", user.getLastName());
+                    session.setAttribute("password", user.getPassword());
                 } else if (user.getRole().equals("User")) {
-                    session.setAttribute("user", user);
+                    session.setAttribute("role", "User");
+                    session.setAttribute("name", user.getName());
+                    session.setAttribute("lastName", user.getLastName());
+                    session.setAttribute("password", user.getPassword());
                 }
             } catch (Exception e) {
                 System.out.println("такого пользователя нет");
             }
-            User user1 = (User) session.getAttribute("user");
-            String path = user1.getRole().toLowerCase();
+            String path = session.getAttribute("role").toString().toLowerCase();
             response.sendRedirect("/" + path);
         }
     }

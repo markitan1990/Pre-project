@@ -5,7 +5,7 @@
     <title>ListUsers</title>
 </head>
 <body>
-<form action="admin" method="post">
+<form action="login" method="post">
     <input type="text" name="name" placeholder="Name" required>
     <input type="text" name="lastName" placeholder="Last Name" required>
     <input type="text" name="password" placeholder="Password" required>
