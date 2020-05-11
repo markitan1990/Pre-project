@@ -2,29 +2,19 @@ package dao;
 
 
 import model.User;
-import org.w3c.dom.ls.LSOutput;
 import util.DBhelper;
-import util.UserDao;
 
-import javax.management.Query;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserJdbcDAO implements UserDao {
-    private static UserJdbcDAO userJdbcDAO;
     private Connection connection;
 
-    private UserJdbcDAO(Connection connection) {
+    public UserJdbcDAO(Connection connection) {
         this.connection = connection;
     }
 
-    public static UserJdbcDAO getIstance() {
-        if (userJdbcDAO == null) {
-            return new UserJdbcDAO(DBhelper.getInstance().getConnection());
-        }
-        return userJdbcDAO;
-    }
 
     @Override
     public void addUser(User user) {

@@ -1,7 +1,8 @@
 package service;
 
 import model.User;
-import util.UserDao;
+import dao.UserDao;
+import util.PropertyReader;
 import util.UserDaoFactory;
 
 import java.io.FileInputStream;
@@ -22,27 +23,9 @@ public class Service {
 
     public static Service getInstance() {
         if (service == null) {
-            return new Service(new UserDaoFactory().getCurentConnection(getProperties()));
+            return new Service(new UserDaoFactory().getCurentConnection(PropertyReader.readProperty("daotype")));
         }
         return service;
-    }
-
-    public static String getProperties() {
-        Properties properties = new Properties();
-        String daotype = "";
-        try {
-            String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-            String appConfigPath = rootPath + "config.properties";
-
-            FileInputStream fileInputStream = new FileInputStream(appConfigPath);
-            properties.load(fileInputStream);
-            daotype = properties.getProperty("daotype");
-        } catch (FileNotFoundException e) {
-            System.out.println("Файл не найден");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return daotype;
     }
 
     public void addUser(User user) throws SQLException {

@@ -16,11 +16,6 @@ public class EditUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getParameter("name").isEmpty() || req.getParameter("lastName").isEmpty() || req.getParameter("password").isEmpty()) {
             System.out.println("форма не заполнена");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

@@ -1,16 +1,19 @@
 package util;
 
+import dao.UserDao;
 import dao.UserHibernateDAO;
 import dao.UserJdbcDAO;
 
 public class UserDaoFactory {
+    private DBhelper dBhelper = new DBhelper();
+
     public UserDao getCurentConnection(String type) {
         switch (type) {
             case "hibernate":
-                return UserHibernateDAO.getInstance();
+                return new UserHibernateDAO(dBhelper.getConfiguration());
             case "jdbc":
-                return UserJdbcDAO.getIstance();
+                return new UserJdbcDAO(dBhelper.getConnection());
         }
-        return UserHibernateDAO.getInstance();
+        return new UserHibernateDAO(dBhelper.getConfiguration());
     }
 }

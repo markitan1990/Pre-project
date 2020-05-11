@@ -16,7 +16,7 @@ public class AddUserServlet extends HttpServlet {
     Service service = Service.getInstance();
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         if (req.getParameter("name").isEmpty() || req.getParameter("lastName").isEmpty() || req.getParameter("password").isEmpty()) {
             System.out.println("форма не заполнена");
@@ -33,8 +33,4 @@ public class AddUserServlet extends HttpServlet {
         resp.sendRedirect("/admin");
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPut(req, resp);
-    }
 }

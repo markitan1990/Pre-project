@@ -6,24 +6,16 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import util.DBhelper;
-import util.UserDao;
 
 import java.util.List;
 
 public class UserHibernateDAO implements UserDao {
-    private static UserHibernateDAO userHibernateDAO;
     private SessionFactory sessionFactory;
 
-    private UserHibernateDAO(SessionFactory sessionFactory) {
+    public UserHibernateDAO(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
-    public static UserHibernateDAO getInstance() {
-        if (userHibernateDAO == null) {
-            return new UserHibernateDAO(DBhelper.getInstance().getConfiguration());
-        }
-        return userHibernateDAO;
-    }
 
     @Override
     public boolean isUserExist(User user) {

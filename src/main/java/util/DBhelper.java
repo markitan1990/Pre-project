@@ -12,18 +12,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBhelper {
-    private static DBhelper dBhelper;
-
-    private DBhelper() {
-
-    }
-
-    public static DBhelper getInstance() {
-        if (dBhelper == null) {
-            return new DBhelper();
-        }
-        return dBhelper;
-    }
 
     public Connection getConnection() {
         try {
