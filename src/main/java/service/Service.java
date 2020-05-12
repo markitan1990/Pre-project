@@ -19,7 +19,7 @@ public class Service {
 
     public static Service getInstance() {
         if (service == null) {
-            return new Service(new UserDaoFactory().getCurentConnection(PropertyReader.readProperty("daotype")));
+            return new Service(new UserDaoFactory().getDAO(PropertyReader.readProperty("daotype")));
         }
         return service;
     }
@@ -51,5 +51,9 @@ public class Service {
 
     public void editUser(User user) {
         userDao.editUser(user);
+    }
+
+    public User getUserById(long id) {
+        return userDao.getUserById(id);
     }
 }

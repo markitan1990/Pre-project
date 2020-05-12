@@ -23,7 +23,7 @@ public class FilterLoginServlet implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response =(HttpServletResponse) servletResponse;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpSession session = request.getSession();
         ServletContext ctx = filterConfig.getServletContext();
 
@@ -33,7 +33,7 @@ public class FilterLoginServlet implements Filter {
             if (isLoggedIn) {
                 ctx.getRequestDispatcher("/" + session.getAttribute("role").toString().toLowerCase()).forward(request, response);
             }
-            ctx.getRequestDispatcher("/login.jsp").forward(request, response);
+            ctx.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         } else if (reqe.equals("POST")) {
             User user = null;
             try {
@@ -56,10 +56,5 @@ public class FilterLoginServlet implements Filter {
             String path = session.getAttribute("role").toString().toLowerCase();
             response.sendRedirect("/" + path);
         }
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

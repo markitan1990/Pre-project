@@ -27,6 +27,6 @@ public class AdminServlet extends HttpServlet {
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
-        getServletContext().getRequestDispatcher("/admin.jsp").forward(req, resp);
+        getServletContext().getRequestDispatcher("/WEB-INF/admin.jsp").forward(req, resp);
     }
 }

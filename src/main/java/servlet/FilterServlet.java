@@ -1,8 +1,5 @@
 package servlet;
 
-import model.User;
-import service.Service;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +20,7 @@ public class FilterServlet implements Filter {
         response = (HttpServletResponse) servletResponse;
         HttpSession session = request.getSession();
         ServletContext ctx = filterConfig.getServletContext();
+        String referrer = request.getHeader("referer");
 
         boolean isLoggedIn = (session != null && session.getAttribute("role") != null);
         if (isLoggedIn) {
@@ -40,10 +38,5 @@ public class FilterServlet implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

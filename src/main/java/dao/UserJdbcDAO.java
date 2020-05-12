@@ -142,4 +142,9 @@ public class UserJdbcDAO implements UserDao {
         }
         return res;
     }
+
+    @Override
+    public User getUserById(long id) {
+        return null;
+    }
 }

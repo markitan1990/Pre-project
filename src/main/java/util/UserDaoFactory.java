@@ -7,7 +7,7 @@ import dao.UserJdbcDAO;
 public class UserDaoFactory {
     private DBhelper dBhelper = new DBhelper();
 
-    public UserDao getCurentConnection(String type) {
+    public UserDao getDAO(String type) {
         switch (type) {
             case "hibernate":
                 return new UserHibernateDAO(dBhelper.getConfiguration());

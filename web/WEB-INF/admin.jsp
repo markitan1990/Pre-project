@@ -65,14 +65,21 @@
 
     #close {
         position: absolute;
+        z-index: 3;
         top: -100%;
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
         width: 30%;
+        background: white;
+        border: 1px solid;
+        box-shadow: 8px 7px rgba(0, 0, 0, 0.4);
         height: 40%;
         transition: 0.5s;
         margin: 0 auto;
+        left: 0;
+        right: 0;
     }
 
     .col form {
@@ -114,22 +121,28 @@
         width: 50%;
         margin: 15px;
     }
-    .combobox{
+
+    .combobox {
         margin: 4px 7px;
 
     }
 </style>
 <script>
-    function editFunction() {
+    var ar;
+
+    function editFunction(val) {
+        ar = val.value;
+
         var el = document.getElementById("modal");
-        var el2 = document.getElementById("close");
+        var el2 = document.getElementsByClassName(ar)[0];
         el.classList.toggle("on");
         el2.classList.toggle("on");
+
     }
 
     function modalOff() {
         var el = document.getElementById("modal");
-        var el2 = document.getElementById("close");
+        var el2 = document.getElementsByClassName(ar)[0];
         el.classList.toggle("on");
         el2.classList.toggle("on");
     }
@@ -138,6 +151,7 @@
         var a = e.id;
         var f = document.getElementById('id');
         f.setAttribute('value', a);
+
     }
 
 </script>
@@ -146,7 +160,7 @@
     <input type="text" name="name" placeholder="Name">
     <input type="text" name="lastName" placeholder="Second Name">
     <input type="text" name="password" placeholder="Password">
-    <select name ="combobox" class="combobox">
+    <select name="combobox" class="combobox">
         <option name="user">User</option>
         <option name="admin">Admin</option>
     </select>
@@ -172,31 +186,35 @@
             <div class="col"><c:out value="${user.password}"/></div>
             <div class="col"><c:out value="${user.role}"/></div>
             <div class="col">
-                <button id=${user.id} name=${user.id} onclick="editFunction(); javascript:f(this);">Edit</button>
+                <button id=${user.id} name="edit" value="${user.id}" onclick="editFunction(this); javascript:f(this);">
+                    Edit
+                </button>
                 <form action="deleteUser" method="post">
                     <button name="Delete" type="submit" value=${user.id}>Delete</button>
                 </form>
             </div>
+            <div id="close" class="${user.id}">
+                <form action="editUser" method="post">
+                    <input type="text" name="id" value="${user.id}" id="id">
+                    <input type="text" placeholder="New name" class="inp" name="name" value="${user.name}">
+                    <input type="text" placeholder="New lastName" class="inp" name="lastName" value="${user.lastName}">
+                    <input type="text" placeholder="New password" class="inp" name="password" value="${user.password}">
+                    <select name="combobox" class="combobox inp">
+                        <option name="user">User</option>
+                        <option name="admin">Admin</option>
+                    </select>
+                    <button type="submit" onclick="modalOff()" class="inp" name="Edit">Edit</button>
+                </form>
+            </div>
         </div>
+
     </c:forEach>
 
 
     <div id="modal" onclick="modalOff()">
 
     </div>
-    <div id="close">
-        <form action="editUser" method="get">
-            <input type="text" name="id" value="" id="id">
-            <input type="text" placeholder="New name" class="inp" name="name">
-            <input type="text" placeholder="New lastName" class="inp" name="lastName">
-            <input type="text" placeholder="New password" class="inp" name="password">
-            <select name ="combobox" class="combobox inp">
-                <option name="user">User</option>
-                <option name="admin">Admin</option>
-            </select>
-            <button type="submit" onclick="modalOff()" class="inp" name="Edit">Edit</button>
-        </form>
-    </div>
+
 </div>
 </body>
 </html>

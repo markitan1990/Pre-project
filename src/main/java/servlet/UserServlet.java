@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @WebServlet(value = "/user")
 public class UserServlet extends HttpServlet {
@@ -23,6 +22,6 @@ public class UserServlet extends HttpServlet {
             session.setAttribute("message", "<h1>Вы зашли как аноним. Информация не доступна.</h1>");
             System.out.println("No information for you");
         }
-        getServletContext().getRequestDispatcher("/user.jsp").forward(req, resp);
+        getServletContext().getRequestDispatcher("/WEB-INF/user.jsp").forward(req, resp);
     }
 }

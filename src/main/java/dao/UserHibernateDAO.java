@@ -95,4 +95,11 @@ public class UserHibernateDAO implements UserDao {
             return list.get(0);
         }
     }
+
+    @Override
+    public User getUserById(long id) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(User.class, id);
+        }
+    }
 }
